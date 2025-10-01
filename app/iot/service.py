@@ -33,4 +33,7 @@ class IOTService:
         return device_id
 
     async def send_msg(self, msg: Message) -> None:
-        await self.devices[msg.device_id].send_message(msg.msg_type, msg.data)
+        device = self.devices.get(msg.device_id)
+        if not device:
+            raise ValueError(f"Unknown device id {msg.device_id}")
+        await device.send_message(msg.msg_type, msg.data)
